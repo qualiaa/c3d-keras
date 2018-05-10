@@ -1,0 +1,8 @@
+*.pkl.xz
+*.h5
+__*
+data
+*.mp4
+*.avi
+*.webm
+conv3d_deepnetA_sport1m_iter_1900000
