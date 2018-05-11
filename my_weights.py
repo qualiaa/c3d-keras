@@ -5,7 +5,7 @@ def load_weights(settings=None):
     if settings is None:
         settings = good_settings[0]
     print("Loading model parameters")
-    input_weights_string = "keras_weights.pkl.xz"
+    input_weights_string = "keras_weights"
 
     conv_layers = [1,3,5,6,8,9,11,12]
     fc_layers = [16,18,20]
