@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-DATA_DIR = "data"
+DATA_DIR = "data/train"
 MY_WEIGHTS = True
 
 import sys
@@ -23,6 +23,14 @@ from random_crop_slice import *
 import pkl_xz
 import cv2
 
+TF = [True,False]
+KEYS = ["transposition",
+        "flip_x",
+        "flip_y",
+        "flip_z",
+        "flip_conv_bias",
+        "flip_fc_bias"]
+
 TF = [True, False]
 
 from functools import reduce
@@ -34,16 +42,10 @@ def generate_settings():
     # generate all possible weight configuration settings
     #transpositions=([xyz + (3,4) for xyz in permutations((0,1,2))] if MY_WEIGHTS
               #else [xyz + (1,0) for xyz in permutations((2,3,4))])
-    transposition = [(0,1,2,3,4) if MY_WEIGHTS else (2,3,4,1,0)]
-    #keys = ["transposition","flip_x","flip_y","flip_z","flip_conv_bias","flip_fc_bias","flip_fc"]
-    keys = ["transposition",
-            "flip_x",
-            "flip_y",
-            "flip_z",
-            "flip_conv_bias",
-            "flip_fc_bias"]
-    values_list = product(transposition,*repeat(TF, len(keys)-1))
-    search_space = [dict(zip(keys, a)) for a in values_list]
+    transposition=[(0,1,2,3,4) if MY_WEIGHTS else (2,3,4,1,0)]
+    all_results = []
+    values_list = product(transposition,*repeat(TF,len(KEYS)-1))
+    search_space = [dict(zip(KEYS,a)) for a in values_list]
     return search_space
 
 def _output_suf():
@@ -128,7 +130,7 @@ def pims_to_np(pims_clip):
 
 # take average prediction over five clips for improved classification
 def evaluate(num_vids=None):
-    root = PurePath(DATA_DIR,"train","videos")
+    root = PurePath(DATA_DIR,"videos")
     if num_vids is None:
         with open(DATA_DIR+"/num_vids") as f:
             num_vids = int(f.read())
@@ -283,6 +285,6 @@ def eval_good_settings():
     return results
 
 model = create_model()
-load_weights()
-scores = evaluate()
+load_weights(settings=dict(zip(KEYS, [(0, 1, 2, 3, 4)] + list(repeat(False)))))
+scores = evaluate(500)
 print(scores)
