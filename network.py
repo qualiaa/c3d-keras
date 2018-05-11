@@ -102,7 +102,7 @@ def create_model():
             metrics=['categorical_accuracy',top_3,top_5])
     return model
 
-def load_weights(settings):
+def load_weights(settings=None):
     if MY_WEIGHTS:
         params = mine.load_weights(settings)
     else:
