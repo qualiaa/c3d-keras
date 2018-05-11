@@ -285,6 +285,6 @@ def eval_good_settings():
     return results
 
 model = create_model()
-load_weights(settings=dict(zip(KEYS, [(0, 1, 2, 3, 4)] + list(repeat(False)))))
+load_weights(settings={KEYS[0]: (0, 1, 2, 3, 4)}.update(dict(zip(KEYS[1:], repeat(False)))))
 scores = evaluate(500)
 print(scores)
